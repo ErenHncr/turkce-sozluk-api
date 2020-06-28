@@ -91,31 +91,31 @@ const tdkSearch = async (req, res) => {
 
 const tdkIcerik = async (req, res) => {
 
-  // try {
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
-  // goes to https://sozluk.gov.tr/
-  await page.goto('https://sozluk.gov.tr/');
+  try {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+    // goes to https://sozluk.gov.tr/
+    await page.goto('https://sozluk.gov.tr/');
 
-  const result = await page.evaluate(async () => {
-    const kelime = document.querySelector('#column-1').innerText;
-    const kelimeAnlam = document.querySelector('#column0').innerText;
-    const atasozu = document.querySelector('.atasoz0').innerText;
-    const atasozuAnlam = document.querySelector('.atasozAnlam0').innerText;
+    const result = await page.evaluate(async () => {
+      const kelime = document.querySelector('#column-1').innerText;
+      const kelimeAnlam = document.querySelector('#column0').innerText;
+      const atasozu = document.querySelector('.atasoz0').innerText;
+      const atasozuAnlam = document.querySelector('.atasozAnlam0').innerText;
 
-    return {
-      kelime,
-      kelimeAnlam,
-      atasozu,
-      atasozuAnlam
-    };
-  });
-  browser.close();
-  return res.status(200).json(result);
+      return {
+        kelime,
+        kelimeAnlam,
+        atasozu,
+        atasozuAnlam
+      };
+    });
+    browser.close();
+    return res.status(200).json(result);
 
-  // } catch (error) {
-  //   return res.status(400).json(null);
-  // }
+  } catch (error) {
+    return res.status(400).json(null);
+  }
 }
 
 const tdkKelimeOneri = async (req, res) => {
