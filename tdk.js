@@ -92,8 +92,8 @@ const tdkSearch = async (req, res) => {
 const tdkIcerik = async (req, res) => {
   //
   try {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+    const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
+    const page = await browser.newPage({ headless: true });
     // goes to https://sozluk.gov.tr/
     await page.goto('https://sozluk.gov.tr/');
 
