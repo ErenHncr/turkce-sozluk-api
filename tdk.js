@@ -31,8 +31,8 @@ const tdkSearch = async (req, res) => {
       // separates meaning and example
       temp = text[0].split(':')
       anlamlar[0] = {
-        type: temp[0],
-        anlam: temp[1]
+        meaning: temp[0],
+        example: temp[1]
       }
     }
     // separates type, meaning and example
@@ -90,33 +90,33 @@ const tdkSearch = async (req, res) => {
 };
 
 const tdkIcerik = async (req, res) => {
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage({ headless: false });
-  // goes to https://sozluk.gov.tr/
-  await page.goto('https://sozluk.gov.tr/');
-  // Instead of using waitFor or waitForNavigation,
-  // using screenshot is more effective for waiting to page load 
-  await page.screenshot();
-  const result = await page.evaluate(async () => {
-    const kelime = document.querySelector('#column-1').innerText;
-    const kelimeAnlam = document.querySelector('#column0').innerText;
-    const atasozu = document.querySelector('.atasoz0').innerText;
-    const atasozuAnlam = document.querySelector('.atasozAnlam0').innerText;
-    const arananKelime = document.querySelector('#tdk-srch-input').value;
-    //const aranan = document.querySelector('#bulunan-gts0').innerText;
-    return {
-      kelime,
-      kelimeAnlam,
-      atasozu,
-      atasozuAnlam,
-      arananKelime
-      //aranan,
-    };
-  });
-  if (req != null) {
-    res.status(200).json(result);
+  try {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage({ headless: false });
+    // goes to https://sozluk.gov.tr/
+    await page.goto('https://sozluk.gov.tr/');
+    // Instead of using waitFor or waitForNavigation,
+    // using screenshot is more effective for waiting to page load 
+    await page.screenshot();
+    const result = await page.evaluate(async () => {
+      const kelime = document.querySelector('#column-1').innerText;
+      const kelimeAnlam = document.querySelector('#column0').innerText;
+      const atasozu = document.querySelector('.atasoz0').innerText;
+      const atasozuAnlam = document.querySelector('.atasozAnlam0').innerText;
+
+      return {
+        kelime,
+        kelimeAnlam,
+        atasozu,
+        atasozuAnlam
+      };
+    });
+    browser.close();
+    return res.status(200).json(result);
+
+  } catch (error) {
+    return res.status(400).json(null);
   }
-  return result;
 }
 
 module.exports = {
