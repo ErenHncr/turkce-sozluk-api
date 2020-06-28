@@ -4,6 +4,7 @@ const cors = require('cors');
 const { tdkSearch, tdkIcerik, tdkKelimeOneri } = require('./tdk');
 
 app.use(cors());
+app.use(express.json());
 
 app.get('/search', (req, res) => tdkSearch(req, res));
 app.get('/icerik', (req, res) => tdkIcerik(req, res));
