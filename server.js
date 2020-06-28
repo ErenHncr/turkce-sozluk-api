@@ -10,6 +10,7 @@ app.get('/icerik', (req, res) => tdkIcerik(req, res));
 app.get('/oneri', (req, res) => tdkKelimeOneri(req, res));
 app.get('/*', (req, res) => res.json('Please use /search or /icerik endpoints.'));
 
-app.listen(3000, () => {
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
   console.log('app is running on port 3000');
 });
