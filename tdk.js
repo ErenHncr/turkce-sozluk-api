@@ -5,7 +5,7 @@ const tdkSearch = async (req, res) => {
   let decodedSearch = decodeURIComponent(req.headers.search);
 
   try {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
     const page = await browser.newPage({ headless: true });
     // goes to https://sozluk.gov.tr/
     await page.goto('https://sozluk.gov.tr/');
@@ -121,7 +121,7 @@ const tdkIcerik = async (req, res) => {
 const tdkKelimeOneri = async (req, res) => {
   let decodedSearch = decodeURIComponent(req.headers.search);
   try {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
     const page = await browser.newPage({ headless: true });
     // goes to https://sozluk.gov.tr/
     await page.goto('https://sozluk.gov.tr/');
