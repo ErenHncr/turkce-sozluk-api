@@ -121,6 +121,7 @@ const tdkIcerik = async (req, res) => {
 const tdkKelimeOneri = async (req, res) => {
   let decodedSearch = decodeURIComponent(req.headers.search);
   try {
+    // { args: ['--no-sandbox'] } argument added for Heroku 
     const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
     const page = await browser.newPage({ headless: true });
     // goes to https://sozluk.gov.tr/
