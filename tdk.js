@@ -2,11 +2,11 @@ let puppeteer = require('puppeteer');
 
 const tdkSearch = async (req, res) => {
   // decodes turkish letters
-  decodedSearch = decodeURIComponent(req.headers.search);
+  let decodedSearch = decodeURIComponent(req.headers.search);
 
   try {
     const browser = await puppeteer.launch();
-    const page = await browser.newPage({ headless: false });
+    const page = await browser.newPage({ headless: true });
     // goes to https://sozluk.gov.tr/
     await page.goto('https://sozluk.gov.tr/');
     // types decodedSearch variable into search bar
@@ -90,14 +90,13 @@ const tdkSearch = async (req, res) => {
 };
 
 const tdkIcerik = async (req, res) => {
+
   try {
     const browser = await puppeteer.launch();
-    const page = await browser.newPage({ headless: false });
+    const page = await browser.newPage({ headless: true });
     // goes to https://sozluk.gov.tr/
     await page.goto('https://sozluk.gov.tr/');
-    // Instead of using waitFor or waitForNavigation,
-    // using screenshot is more effective for waiting to page load 
-    await page.screenshot();
+
     const result = await page.evaluate(async () => {
       const kelime = document.querySelector('#column-1').innerText;
       const kelimeAnlam = document.querySelector('#column0').innerText;
@@ -119,7 +118,37 @@ const tdkIcerik = async (req, res) => {
   }
 }
 
+const tdkKelimeOneri = async (req, res) => {
+  let decodedSearch = decodeURIComponent(req.headers.search);
+  try {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage({ headless: true });
+    // goes to https://sozluk.gov.tr/
+    await page.goto('https://sozluk.gov.tr/');
+    await page.type(`[name="q"]`, decodedSearch);
+
+    const result = await page.evaluate(async () => {
+      const suggestions = document.querySelector('#autocmp')
+      let temp = [];
+      boxCount = (suggestions.childElementCount > 3 ? 3 : suggestions.childElementCount)
+      for (let i = 0; i < boxCount; i++) {
+        temp[i] = suggestions.children[i].textContent;
+      }
+      let oneriler = temp;
+      return {
+        oneriler
+      };
+    });
+    browser.close();
+    return res.status(200).json(result);
+
+  } catch (error) {
+    return res.status(400).json(null);
+  }
+}
+
 module.exports = {
   tdkSearch: tdkSearch,
-  tdkIcerik: tdkIcerik
+  tdkIcerik: tdkIcerik,
+  tdkKelimeOneri: tdkKelimeOneri
 };
