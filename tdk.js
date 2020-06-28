@@ -90,7 +90,7 @@ const tdkSearch = async (req, res) => {
 };
 
 const tdkIcerik = async (req, res) => {
-
+  //
   try {
     const browser = await puppeteer.launch();
     const page = await browser.newPage({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
